@@ -1,0 +1,2 @@
+parameters:
+    writable_cache_dir: '/tmp/cache'

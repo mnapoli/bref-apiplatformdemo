@@ -1,0 +1,39 @@
+service: bref-benchmark-apiplatformdemo
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+
+package:
+  exclude:
+    - '*'
+    - '**'
+  include:
+    - handler.js
+    - bref.php
+    - '.bref/**'
+    - 'src/**'
+    - 'vendor/**'
+    # Below are Symfony-specific files and directories
+    - composer.json # Symfony uses it to figure out the root directory
+    - 'bin/**'
+    - 'config/**'
+    - 'Resources/**'
+    - 'var/cache/prod/**' # We want to deploy the production caches
+
+functions:
+  # By default we create one "main" function
+  main:
+    handler: handler.handle
+    timeout: 120 # Timeout in seconds, the default is 6 seconds
+    # The function will match all HTTP URLs
+    events:
+      - http: 'ANY /'
+      - http: 'ANY {proxy+}'
+    environment:
+      APP_ENV: 'prod'
+      APP_DEBUG: '0'
+      APP_SECRET: 'abcdefgh'
+      DATABASE_URL: 'mysql://apiplatformdemo:unshod-chagrin-malamute@bref-benchmark-apiplatformdemo2.c2tbtvu0qnok.us-east-1.rds.amazonaws.com/apiplatformdemo'
+      VARNISH_URL: ''
+      CORS_ALLOW_ORIGIN: '^https?://localhost:?[0-9]*$'

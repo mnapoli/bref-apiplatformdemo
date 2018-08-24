@@ -16,11 +16,20 @@ class Kernel extends BaseKernel
 
     public function getCacheDir()
     {
+//        if (getenv('LAMBDA_TASK_ROOT') !== false) {
+//            return '/tmp/cache/';
+//        }
+
         return $this->getProjectDir().'/var/cache/'.$this->environment;
     }
 
     public function getLogDir()
     {
+        // When on the lambda only /tmp is writeable
+        if (getenv('LAMBDA_TASK_ROOT') !== false) {
+            return '/tmp/log/';
+        }
+
         return $this->getProjectDir().'/var/log';
     }
 
